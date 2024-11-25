@@ -40,15 +40,15 @@ public class ConcreteSyntax {
     // Implementation of the Recursive Descent Parser
 
     public Program program() {
-        // Program --> main { Declarations Statements }
-        Program p = new Program();
-        match("main");
-        match("{");
-        p.decpart = declarations(); // Parse declarations
-        p.body = statements(); // Parse statements
-        match("}");
-        return p;
-    }
+		// Program --> main { Declarations Statements }
+		Program p = new Program();
+		match("main");
+		match("{");
+		p.decpart = declarations(); // Parse declarations
+		p.body = statements(); // Parse statements
+		match("}");
+		return p;
+	}
 
     private Declarations declarations() {
         // Declarations --> { Declaration }*
@@ -105,27 +105,28 @@ public class ConcreteSyntax {
         }
     }
 
-    private Statement statement() {
-        // Statement --> ; | Block | Assignment | IfStatement | WhileStatement
-        Statement s;
-        if (token.getValue().equals(";")) {
-            token = input.nextToken();
-            s = new Skip(); // Skip statement
-        } else if (token.getValue().equals("{")) {
-            token = input.nextToken();
-            s = statements();
-            match("}");
-        } else if (token.getValue().equals("if")) {
-            s = ifStatement();
-        } else if (token.getValue().equals("while")) {
-            s = whileStatement();
-        } else if (token.getType().equals("Identifier")) {
-            s = assignment();
-        } else {
-            throw new RuntimeException(SyntaxError("Statement"));
-        }
-        return s;
-    }
+	private Statement statement() {
+		// Statement --> ; | Block | Assignment | IfStatement | WhileStatement
+		Statement s;
+		if (token.getValue().equals(";")) {
+			token = input.nextToken();
+			s = new Skip();
+		} else if (token.getValue().equals("{")) {
+			token = input.nextToken();
+			s = statements();
+			match("}");
+		} else if (token.getValue().equals("if")) {
+			s = ifStatement();
+		} else if (token.getValue().equals("while")) {
+			s = whileStatement();
+		} else if (token.getType().equals("Identifier")) {
+			s = assignment();
+		} else {
+			throw new RuntimeException(SyntaxError("Statement"));
+		}
+		return s;
+	}
+	
 
     private Block statements() {
         // Block --> { Statements }
@@ -137,20 +138,20 @@ public class ConcreteSyntax {
     }
 
     private Assignment assignment() {
-        // Assignment --> Identifier := Expression ;
-        Assignment a = new Assignment();
-        if (token.getType().equals("Identifier")) {
-            a.target = new Variable();
-            a.target.id = token.getValue();
-            token = input.nextToken(); // Move past identifier
-            match(":=");
-            a.source = expression();
-            match(";");
-        } else {
-            throw new RuntimeException(SyntaxError("Identifier"));
-        }
-        return a;
-    }
+		// Assignment --> Identifier := Expression ;
+		Assignment a = new Assignment();
+		if (token.getType().equals("Identifier")) {
+			a.target = new Variable();
+			a.target.id = token.getValue();
+			token = input.nextToken(); // Move past Identifier
+			match(":=");
+			a.source = expression(); // Parse the expression
+			match(";"); // Expect semicolon
+		} else {
+			throw new RuntimeException(SyntaxError("Identifier"));
+		}
+		return a;
+	}
 
     private Expression expression() {
         // Expression --> Conjunction { || Conjunction }*
@@ -266,30 +267,30 @@ public class ConcreteSyntax {
     }
 
     private Conditional ifStatement() {
-        // IfStatement --> if ( Expression ) Statement { else Statement }opt
-        Conditional c = new Conditional();
-        match("if");
-        match("(");
-        c.test = expression();
-        match(")");
-        c.thenbranch = statement();
-        if (token.getValue().equals("else")) {
-            token = input.nextToken();
-            c.elsebranch = statement();
-        }
-        return c;
-    }
+		// IfStatement --> if ( Expression ) Statement { else Statement }opt
+		Conditional c = new Conditional();
+		match("if");
+		match("(");
+		c.test = expression(); // Parse the condition
+		match(")");
+		c.thenbranch = statement(); // Parse the 'then' branch
+		if (token.getValue().equals("else")) {
+			token = input.nextToken(); // Move past 'else'
+			c.elsebranch = statement(); // Parse the 'else' branch
+		}
+		return c;
+	}
 
     private Loop whileStatement() {
-        // WhileStatement --> while ( Expression ) Statement
-        Loop l = new Loop();
-        match("while");
-        match("(");
-        l.test = expression();
-        match(")");
-        l.body = statement();
-        return l;
-    }
+		// WhileStatement --> while ( Expression ) Statement
+		Loop l = new Loop();
+		match("while");
+		match("(");
+		l.test = expression(); // Parse the loop condition
+		match(")");
+		l.body = statement(); // Parse the loop body
+		return l;
+	}
 
     private boolean isInteger(String s) {
         try {
