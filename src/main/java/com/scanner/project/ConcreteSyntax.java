@@ -39,16 +39,17 @@ public class ConcreteSyntax {
 
     // Implementation of the Recursive Descent Parser
 
-    public Program program() {
+	public Program program() {
 		// Program --> main { Declarations Statements }
 		Program p = new Program();
-		match("main");
-		match("{");
+		match("main"); // Match "main"
+		match("{"); // Match opening brace
 		p.decpart = declarations(); // Parse declarations
 		p.body = statements(); // Parse statements
-		match("}");
+		match("}"); // Match closing brace
 		return p;
 	}
+	
 
     private Declarations declarations() {
         // Declarations --> { Declaration }*
@@ -137,35 +138,38 @@ public class ConcreteSyntax {
         return b;
     }
 
-    private Assignment assignment() {
+	private Assignment assignment() {
 		// Assignment --> Identifier := Expression ;
 		Assignment a = new Assignment();
 		if (token.getType().equals("Identifier")) {
 			a.target = new Variable();
-			a.target.id = token.getValue();
+			a.target.id = token.getValue(); // Parse the target variable
 			token = input.nextToken(); // Move past Identifier
-			match(":=");
-			a.source = expression(); // Parse the expression
-			match(";"); // Expect semicolon
+			match(":="); // Match assignment operator
+			a.source = expression(); // Parse the right-hand expression
+			match(";"); // Match semicolon
 		} else {
 			throw new RuntimeException(SyntaxError("Identifier"));
 		}
 		return a;
 	}
+	
 
-    private Expression expression() {
-        // Expression --> Conjunction { || Conjunction }*
-        Expression e = conjunction();
-        while (token.getValue().equals("||")) {
-            Binary b = new Binary();
-            b.term1 = e;
-            b.op = new Operator(token.getValue());
-            token = input.nextToken();
-            b.term2 = conjunction();
-            e = b;
-        }
-        return e;
-    }
+	private Expression expression() {
+		// Expression --> Conjunction { || Conjunction }*
+		Binary b;
+		Expression e = conjunction();
+		while (token.getValue().equals("||")) {
+			b = new Binary();
+			b.term1 = e;
+			b.op = new Operator(token.getValue()); // Parse "||"
+			token = input.nextToken(); // Move past "||"
+			b.term2 = conjunction();
+			e = b;
+		}
+		return e;
+	}
+	
 
     private Expression conjunction() {
         // Conjunction --> Relation { && Relation }*
@@ -266,31 +270,33 @@ public class ConcreteSyntax {
         return e;
     }
 
-    private Conditional ifStatement() {
+	private Conditional ifStatement() {
 		// IfStatement --> if ( Expression ) Statement { else Statement }opt
 		Conditional c = new Conditional();
-		match("if");
-		match("(");
+		match("if"); // Match "if"
+		match("("); // Match opening parenthesis
 		c.test = expression(); // Parse the condition
-		match(")");
-		c.thenbranch = statement(); // Parse the 'then' branch
+		match(")"); // Match closing parenthesis
+		c.thenbranch = statement(); // Parse the "then" statement
 		if (token.getValue().equals("else")) {
-			token = input.nextToken(); // Move past 'else'
-			c.elsebranch = statement(); // Parse the 'else' branch
+			token = input.nextToken(); // Match "else"
+			c.elsebranch = statement(); // Parse the "else" statement
 		}
 		return c;
 	}
+	
 
     private Loop whileStatement() {
 		// WhileStatement --> while ( Expression ) Statement
 		Loop l = new Loop();
-		match("while");
-		match("(");
+		match("while"); // Match "while"
+		match("("); // Match opening parenthesis
 		l.test = expression(); // Parse the loop condition
-		match(")");
+		match(")"); // Match closing parenthesis
 		l.body = statement(); // Parse the loop body
 		return l;
 	}
+	
 
     private boolean isInteger(String s) {
         try {

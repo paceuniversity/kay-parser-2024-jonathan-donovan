@@ -1,13 +1,7 @@
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
-	9Syntax error - Expecting: main But saw: Other = main(){
-
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
-7Syntax error - Expecting: main But saw: Other = main{
+5Syntax error - Expecting: ; But saw: Identifier = i
+7Syntax error - Expecting: Statement But saw: Other = 
+4Syntax error - Expecting: ( But saw: Separator = {
+6Syntax error - Expecting: := But saw: Identifier = i
+	4Syntax error - Expecting: { But saw: Separator = (
+1Syntax error - Expecting: := But saw: Other = =
 ;Syntax error - Expecting: main But saw: Identifier = void
